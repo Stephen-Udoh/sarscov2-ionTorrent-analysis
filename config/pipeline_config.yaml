@@ -1,0 +1,83 @@
+project:
+  name: "SARS-CoV-2 Ion Torrent Genomic Surveillance"
+  author: "Udoh Stephen Nsikak"
+  institution: "MOGID_RL"
+  version: "1.0.0"
+
+paths:
+  raw_bam_dir:     "data/raw"
+  reference_dir:   "data/reference"
+  metadata_file:   "data/metadata/sample_metadata.csv"
+  results_dir:     "results"
+  figures_dir:     "results/figures"
+  reports_dir:     "results/reports"
+  audit_log:       "audit.log"
+
+reference:
+  accession:   "NC_045512.2"
+  fasta_file:  "data/reference/NC_045512.2.fasta"
+  genome_size: 29903
+
+fastqc:
+  threads: 4
+  output_dir: "results/qc/fastqc"
+
+trimmomatic:
+  mode:           "SE"
+  threads:        4
+  sliding_window: "4:20"
+  leading:        3
+  trailing:       3
+  minlen:         50
+
+bwa:
+  threads: 8
+
+samtools:
+  threads:        8
+  mapq_threshold: 20
+
+mosdepth:
+  window_size: 500
+  fast_mode:   true
+
+ivar_variants:
+  min_quality:   20
+  min_frequency: 0.03
+  min_depth:     10
+
+ivar_consensus:
+  min_frequency: 0.5
+  min_depth:     10
+  ambig_char:    "N"
+
+nextclade:
+  dataset_name: "sars-cov-2"
+  dataset_dir:  "data/reference/nextclade_dataset"
+
+mafft:
+  threads:   8
+  algorithm: "--auto"
+
+iqtree:
+  model:     "GTR+G"
+  bootstrap: 1000
+  threads:   "AUTO"
+
+qc_gates:
+  min_reads_prefilter:  10000
+  min_reads_flag:       5000
+  min_pct_mapped:       90.0
+  flag_pct_mapped:      70.0
+  min_pct_genome_10x:   90.0
+  flag_pct_genome_10x:  70.0
+  min_mean_depth:       100
+  flag_mean_depth:      20
+  max_pct_ns:           5.0
+  flag_pct_ns:          10.0
+
+visualization:
+  figure_dpi:    300
+  figure_width:  10
+  figure_height: 7
+  palette:       "viridis"

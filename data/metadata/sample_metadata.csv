@@ -1,0 +1,11 @@
+sample_id,bam_file,collection_date,collection_site,state,lga,country,patient_age_group,patient_sex,ct_value_ngene,ct_value_orf1ab,sequencing_run,instrument,operator,notes
+bauchi_1586,bauchi_1586.bam,2021-01-01,MOGID_RL,Bauchi,Bauchi,Nigeria,NA,NA,27.29,31.84,NA,Ion_Torrent_S5,Udoh_SN,
+bauchi_3370,bauchi_3370.bam,2020-01-01,MOGID_RL,Bauchi,Bauchi,Nigeria,NA,NA,27.19,31.25,NA,Ion_Torrent_S5,Udoh_SN,
+bauchi_4200,bauchi_4200.bam,2020-01-01,MOGID_RL,Bauchi,Bauchi,Nigeria,NA,NA,24.37,27.00,NA,Ion_Torrent_S5,Udoh_SN,
+bauchi_4229,bauchi_4229.bam,2020-01-01,MOGID_RL,Bauchi,Bauchi,Nigeria,NA,NA,27.85,31.29,NA,Ion_Torrent_S5,Udoh_SN,
+bauchi_4243,bauchi_4243.bam,2020-01-01,MOGID_RL,Bauchi,Bauchi,Nigeria,NA,NA,23.15,26.68,NA,Ion_Torrent_S5,Udoh_SN,
+bauchi_4244,bauchi_4244.bam,2020-01-01,MOGID_RL,Bauchi,Bauchi,Nigeria,NA,NA,23.67,29.53,NA,Ion_Torrent_S5,Udoh_SN,
+kano_0103,kano_0103.bam,2025-01-01,MOGID_RL,Kano,Kano,Nigeria,NA,NA,22.04,27.03,NA,Ion_Torrent_S5,Udoh_SN,
+kano_0104,kano_0104.bam,2025-01-01,MOGID_RL,Kano,Kano,Nigeria,NA,NA,29.19,31.78,NA,Ion_Torrent_S5,Udoh_SN,
+kano_0105,kano_0105.bam,2025-01-01,MOGID_RL,Kano,Kano,Nigeria,NA,NA,29.03,30.34,NA,Ion_Torrent_S5,Udoh_SN,
+kaduna_0101,kaduna_0101.bam,2021-01-01,MOGID_RL,Kaduna,Kaduna,Nigeria,NA,NA,23.04,26.73,NA,Ion_Torrent_S5,Udoh_SN,

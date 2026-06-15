@@ -1,0 +1,39 @@
+name: Pipeline Validation
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          environment-file: envs/environment.yml
+          activate-environment: sarscov2-pipeline
+      - name: Verify tools
+        shell: bash -l {0}
+        run: |
+          conda activate sarscov2-pipeline
+          python --version
+          fastqc --version
+          samtools --version | head -1
+          echo "✅ Tools OK"
+      - name: Validate config
+        shell: bash -l {0}
+        run: |
+          python -c "
+          import yaml
+          with open('config/pipeline_config.yaml') as f:
+              cfg = yaml.safe_load(f)
+          print('✅ Config valid:', cfg['project']['name'])
+          "
+      - name: Check bash syntax
+        run: |
+          bash -n scripts/bash/run_pipeline.sh
+          bash -n scripts/bash/00_setup.sh
+          echo "✅ Bash syntax OK"
