@@ -6,7 +6,7 @@ suppressPackageStartupMessages({
   library(ggplot2); library(viridis); library(scales)
 })
 
-theme_publication <- function(base_size=11, base_family="Arial") {
+theme_publication <- function(base_size=11, base_family="DejaVu Sans") {
   theme_classic(base_size=base_size, base_family=base_family) %+replace%
     theme(
       panel.background  = element_rect(fill="white", color=NA),
@@ -63,8 +63,19 @@ save_figure <- function(plot, filepath, width=10, height=7,
   dir.create(dirname(filepath), showWarnings=FALSE, recursive=TRUE)
   for (fmt in formats) {
     outfile <- paste0(filepath, ".", fmt)
-    ggplot2::ggsave(filename=outfile, plot=plot,
-                    width=width, height=height, dpi=dpi, bg="white")
+    if (fmt == "png") {
+      ragg::agg_png(filename=outfile, width=width, height=height,
+                    units="in", res=dpi, background="white")
+      print(plot)
+      dev.off()
+    } else if (fmt == "pdf") {
+      cairo_pdf(filename=outfile, width=width, height=height, bg="white")
+      print(plot)
+      dev.off()
+    } else {
+      ggplot2::ggsave(filename=outfile, plot=plot,
+                      width=width, height=height, dpi=dpi, bg="white")
+    }
     message("  Saved: ", outfile)
   }
   invisible(plot)
