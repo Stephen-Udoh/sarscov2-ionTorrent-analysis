@@ -493,6 +493,144 @@ not an assumption based on the directory name.
 
 ---
 
+## Part 2.8 — R Figure Generation: Font Rendering and Tree Styling
+
+### Base R PDF device fails to resolve system fonts ("invalid font type")
+
+**Symptom:** any `ggsave()` call that rendered text (even a trivial one-line
+`geom_text()` test completely unrelated to ggtree) failed with:
+```
+Error in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+  invalid font type
+```
+This occurred consistently regardless of which font family name was
+specified in the ggplot theme (tried `"Arial"`, then `"DejaVu Sans"` — both
+failed identically).
+**Diagnosis approach:** first confirmed the font genuinely existed on the
+system via `fc-list | grep -i dejavu`, which it did. This ruled out "font not
+installed" and pointed instead at R's graphics device itself failing to
+*resolve* a font family name into an actual font file at render time — a
+device-level problem, not a font-availability problem. Confirmed this by
+reproducing the error with a minimal 5-line script using only base
+`ggplot2`/`ggsave()`, completely independent of `ggtree`, which ruled out
+ggtree-specific causes.
+**Root cause:** R's default `pdf()` graphics device (which `ggsave()` uses
+internally for `.pdf` output, and which `png()` defaults to internally as
+well in some configurations) does not use the system's `fontconfig`
+database to resolve font family name strings — it relies on a much more
+limited internal font mapping that often does not recognise common Linux
+font family names like `"DejaVu Sans"` even when that font is correctly
+installed and discoverable by every other application on the system.
+**Fix:** installed the `ragg` package, which provides modern raster graphics
+devices (`agg_png()`, etc.) built on a proper font-rendering backend, and
+switched the project's shared `save_figure()` utility to use:
+- `ragg::agg_png()` for PNG output
+- `cairo_pdf()` (built into base R, but unlike the default `pdf()` device,
+  correctly uses Cairo's font handling) for PDF output
+```r
+ragg::agg_png(filename = outfile, width = width, height = height,
+              units = "in", res = dpi, background = "white")
+print(plot); dev.off()
+# ...
+cairo_pdf(filename = outfile, width = width, height = height, bg = "white")
+print(plot); dev.off()
+```
+This fixed font rendering project-wide, since every figure in the pipeline
+calls the same shared `save_figure()` function.
+**Lesson:** "invalid font type" or similarly cryptic low-level grid/graphics
+errors in R are very often a **graphics device** problem, not a font
+*installation* problem — confirm the font exists with `fc-list` first, and
+if it does, suspect the device (`pdf()`, `png()`, `cairo_pdf()`,
+`ragg::agg_png()`) rather than continuing to try different font family
+name strings, which will not fix a device-level limitation no matter how
+many are tried.
+**Secondary lesson:** when debugging a complex script (in this case a
+~70-line `ggtree` figure script), reproduce the failure with the smallest
+possible isolated snippet first (a 5-line plain `ggplot2` test) before
+assuming the bug is in the complex code — this took two minutes and
+immediately proved the bug had nothing to do with `ggtree`, `theme_publication()`,
+or anything tree-specific, saving significant time that would otherwise have
+been spent debugging the wrong layer of the script.
+
+### Stale rendered image mistaken for a re-run failure
+
+**Symptom:** after editing `06_phylogeny.R` to fix styling (legend overlap,
+a "Reference" category rendering as ungrouped "NA"/black), rerunning the
+script and reopening the PNG appeared to show the exact same flawed image as
+before — as if the edits had not taken effect at all.
+**Diagnosis:** rather than assuming the script edit failed, first checked
+whether the edit had actually landed in the file (`grep` for the new code),
+which confirmed it had. This meant the problem was not the script but the
+*viewing* step — the image viewer/browser had reopened a cached or
+previously-opened copy of the PNG rather than the freshly written one.
+**Fix:** checked the file's actual modification timestamp (`ls -la`) against
+the current time to confirm a fresh render had occurred, then closed any
+already-open preview window before reopening the file fresh with
+`xdg-open`.
+**Lesson:** when a fix appears to have "had no effect," check two things in
+order before concluding the fix itself is wrong: (1) did the edit actually
+land in the source file (`grep` for it), and (2) is the output file you're
+looking at actually the newly generated one (check its timestamp), since
+image viewers and browsers frequently cache previously opened files by
+filename rather than content. This two-step check is much faster than
+re-debugging working code.
+
+---
+
+## Part 2.9 — Iterative Figure Polish: ggtree vs. Dedicated Tree Viewers
+
+Initial `ggtree` output, while scientifically correct (correct topology,
+correct bootstrap values, correct branch lengths), looked visually "thin"
+compared to trees produced by dedicated phylogenetic visualization tools
+like MEGA, iTOL, or FigTree. This is a legitimate, common observation —
+worth recording the reasoning for why this happened and how it was
+resolved, since it generalizes to any ggplot2-based figure that needs to
+compete visually with output from purpose-built desktop/web tools.
+
+**What made the first version look weak**, each independently fixable:
+- Default `theme_publication()` (a generic project-wide ggplot theme) was
+  not designed for trees specifically and left a visible border box and
+  excess axis chrome around the plot
+- No bootstrap support values displayed at internal nodes, despite this
+  data already being present in the tree file — a one-line `geom_nodelab()`
+  addition surfaced it
+- Default tip point size and branch line width were too thin for a
+  10-tip tree, making the figure look sparse
+- A floating, boxed legend overlapped tip labels at certain plot
+  dimensions — moving the legend to a compact horizontal strip below the
+  plot (matching MEGA/iTOL convention) resolved this entirely
+- Default x-axis range left excessive empty whitespace to the right of
+  the longest tip label
+
+**Tools considered as alternatives, for context on when each is the right
+choice:**
+- **MEGA** — desktop GUI; produces excellent manually-tuned output but is
+  not scriptable, so does not fit into a reproducible one-command pipeline
+- **iTOL** (Interactive Tree of Life, web-based) — accepts a `.treefile`
+  directly and produces highly polished output with substantial layout
+  control; commonly the actual source of "nice" trees seen in published
+  papers; a legitimate choice for a final figure even within an otherwise
+  fully scripted pipeline, since the tree *data* (from IQ-TREE) remains
+  fully reproducible regardless of which tool renders the final image
+- **FigTree** — desktop Java application, simple, free, a long-standing
+  standard choice
+- **ggtree** (used here) — fully scriptable and reproducible, integrates
+  directly into the existing R pipeline, and with deliberate styling
+  (`theme_tree2()`, manual legend positioning, `geom_nodelab()`,
+  `ladderize=TRUE`, tuned margins) can match the visual quality of the
+  above tools
+
+**Lesson:** a "boring" or "sparse" first-pass ggplot/ggtree figure is
+almost always a styling/defaults problem, not a tool capability ceiling.
+The fix is a known, finite checklist (purpose-built theme, support values,
+point/line sizing, legend placement and style, axis range, label
+formatting) rather than open-ended guesswork — working through that
+checklist methodically closed the visual gap with dedicated tree-viewer
+output entirely while keeping the figure fully reproducible from a single
+script.
+
+---
+
 ## Part 3 — Quick Diagnostic Reference Table
 
 | Symptom | Likely cause | First commands to run |
@@ -508,6 +646,8 @@ not an assumption based on the directory name.
 | Script dies silently with no error after one line, `set -e` is active | A `((counter++))` hit zero and was read as failure | Add `\|\| true`, or use `var=$((var+1))` instead |
 | "Tool not found" for many tools at once, nothing changed | Conda env not active in this terminal | `echo $CONDA_DEFAULT_ENV`, then `conda activate <env>` |
 | Large `wget` download reports success but `unzip`/parsing fails | Silent truncation/corruption over a slow connection | Don't trust `file`'s "Zip archive data" verdict; verify with `unzip -t` or re-fetch only the specific small files actually needed |
+| R: "invalid font type" error rendering any text in a saved plot | Base `pdf()`/`png()` device can't resolve the font family name via fontconfig | Confirm font exists with `fc-list`; if so, switch device to `ragg::agg_png()` / `cairo_pdf()` rather than trying more font names |
+| A fix "had no effect" after rerunning a script | Either the edit didn't land, or you're viewing a cached output file | `grep` the source file to confirm the edit landed; check the output file's `ls -la` timestamp before re-debugging working code |
 
 ---
 
