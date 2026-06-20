@@ -6,7 +6,7 @@ suppressPackageStartupMessages({
   library(ggplot2); library(viridis); library(scales)
 })
 
-theme_publication <- function(base_size=11, base_family="DejaVu Sans") {
+theme_publication <- function(base_size=11, base_family="Liberation Serif") {
   theme_classic(base_size=base_size, base_family=base_family) %+replace%
     theme(
       panel.background  = element_rect(fill="white", color=NA),
@@ -24,9 +24,9 @@ theme_publication <- function(base_size=11, base_family="DejaVu Sans") {
       legend.text       = element_text(size=base_size-2),
       strip.background  = element_rect(fill="grey95", color="grey70"),
       strip.text        = element_text(size=base_size-1, face="bold"),
-      plot.title        = element_text(size=base_size+2, face="bold", hjust=0),
-      plot.subtitle     = element_text(size=base_size, color="grey40", hjust=0),
-      plot.caption      = element_text(size=base_size-3, color="grey50", hjust=1),
+      plot.title        = element_text(size=base_size, face="bold", hjust=0, family=base_family),
+      plot.subtitle     = element_text(size=base_size-1, color="grey30", hjust=0, family=base_family),
+      plot.caption      = element_text(size=base_size-1, color="grey15", hjust=0, lineheight=1.3, family=base_family),
       plot.margin       = margin(12, 12, 8, 12),
       plot.background   = element_rect(fill="white", color=NA),
       complete=TRUE
