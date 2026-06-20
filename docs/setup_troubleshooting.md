@@ -336,6 +336,163 @@ created (`.amb .ann .bwt .fai .pac .sa`). No errors encountered at this step.
 
 ---
 
+## Part 2.7 — Pre-flight Script and Pipeline Run Issues (Post-Environment-Setup)
+
+These issues surfaced after the conda/R environment was fully working, while
+validating the pipeline scripts themselves and preparing real data to run.
+
+### Bash arithmetic increment killing the script under `set -e`
+
+**Symptom:** `00_setup.sh` silently stopped after printing exactly one ✅ line,
+with no error message at all.
+**Diagnosis approach:** reran with `bash -x scripts/bash/00_setup.sh` to print
+every command before execution, which showed the script exiting immediately
+after `(( PASS++ ))`.
+**Cause:** in bash, `((expr))` returns a *non-zero exit status* (i.e. "failure")
+whenever `expr` evaluates to `0`. `PASS` starts at `0`, so the very first
+`((PASS++))` evaluates the *pre-increment* value (`0`) as the command's exit
+status, which `set -e` treats as a fatal error and kills the script — even
+though the increment itself works correctly.
+**Fix:**
+```bash
+sed -i 's/((PASS++))/((PASS++)) || true/g' scripts/bash/00_setup.sh
+sed -i 's/((WARN++))/((WARN++)) || true/g' scripts/bash/00_setup.sh
+sed -i 's/((FAIL++))/((FAIL++)) || true/g' scripts/bash/00_setup.sh
+```
+**Lesson:** any `((var++))` on a counter that may legitimately be `0` is unsafe
+under `set -e`. Either append `|| true`, or use `: $((var++))` (the leading
+`:` is a no-op command that always succeeds, swallowing the arithmetic
+expression's exit status), or switch to `var=$((var+1))` which never triggers
+this behaviour since plain assignment doesn't set an exit status from the
+value.
+
+### Binary name mismatch: `iqtree2` vs `iqtree`
+
+**Symptom:** pre-flight check reported `iqtree2 not found` despite IQ-TREE
+having installed successfully via conda.
+**Cause:** the conda-forge build of IQ-TREE installs the binary as `iqtree`,
+not `iqtree2`, even though the package itself may be the IQ-TREE2 codebase.
+Binary names vary across distribution channels and aren't always consistent
+with the project/package name.
+**Diagnosis:**
+```bash
+which iqtree2 2>/dev/null || which iqtree 2>/dev/null
+```
+**Fix:** updated all scripts to reference the actual installed binary name:
+```bash
+sed -i 's/iqtree2/iqtree/g' scripts/bash/00_setup.sh
+sed -i 's/iqtree2/iqtree/g' scripts/bash/run_pipeline.sh
+```
+**Lesson:** never assume a tool's command-line binary name matches its
+package name or its commonly-used name in papers/documentation. Always
+verify with `which <tool>` or `command -v <tool>` after installing, and
+check `<tool> --version` / `<tool> --help` to confirm it's actually the
+program intended.
+
+### Nextclade dataset: CLI timeout and corrupted bulk zip download
+
+**Symptom 1:** `nextclade dataset get` failed with:
+```
+Error: error decoding response body / operation timed out
+```
+**Cause:** same underlying network instability seen throughout conda
+installs — large file transfer over an unstable connection.
+**Attempted fix:** `nextclade dataset get ... --timeout 120` (increases the
+CLI's internal timeout) — still failed in this case.
+
+**Symptom 2 (fallback attempt):** downloaded the entire
+`nextclade_data` GitHub repo as a zip (~67MB) via `wget` directly, which
+completed and reported `200 OK`, but `unzip` then failed:
+```
+End-of-central-directory signature not found.
+```
+and Python's `zipfile` module raised `BadZipFile: File is not a zip file`.
+**Cause:** despite `wget` reporting success, the download was silently
+truncated/corrupted — large files over flaky connections can complete the
+HTTP transaction without all bytes arriving intact, and neither `wget` nor
+the OS necessarily catches this without a checksum comparison.
+**Resolution:** abandoned the bulk zip approach entirely. Instead,
+downloaded only the handful of small individual files Nextclade actually
+needs, directly from `raw.githubusercontent.com`, one at a time:
+```bash
+BASE="https://raw.githubusercontent.com/nextstrain/nextclade_data/master/data/nextstrain/sars-cov-2/wuhan-hu-1/orfs"
+wget --timeout=60 --tries=3 "${BASE}/pathogen.json"           -O data/reference/nextclade_dataset/pathogen.json
+wget --timeout=60 --tries=3 "${BASE}/reference.fasta"          -O data/reference/nextclade_dataset/reference.fasta
+wget --timeout=60 --tries=3 "${BASE}/genome_annotation.gff3"   -O data/reference/nextclade_dataset/genome_annotation.gff3
+wget --timeout=60 --tries=3 "${BASE}/sequences.fasta"          -O data/reference/nextclade_dataset/sequences.fasta
+wget --timeout=60 --tries=3 "${BASE}/tree.json"                -O data/reference/nextclade_dataset/tree.json
+wget --timeout=60 --tries=3 "${BASE}/clades.tsv"                -O data/reference/nextclade_dataset/clades.tsv
+```
+All downloaded successfully and `nextclade run --input-dataset ...` correctly
+recognised the resulting folder as a valid dataset.
+**Lesson:** when a large bulk download is unreliable on a poor connection,
+check whether the tool actually needs the *entire* archive or just a handful
+of specific files within it — fetching those individually is far more
+resilient, since each small download either fully succeeds or fails fast,
+rather than silently corrupting partway through a large transfer.
+**Secondary lesson:** `file <name>.zip` reporting "Zip archive data" is
+**not** proof the file is complete or valid — it only inspects the file's
+magic-byte header, not its internal structure/central directory. Always
+verify a downloaded archive with `unzip -t` or by attempting to actually
+read it (e.g. Python's `zipfile.ZipFile(...)`) rather than trusting `file`.
+
+### Stale conda environment state across terminal sessions
+
+**Symptom:** pre-flight check that had previously shown all green suddenly
+reported 7 failures (`trimmomatic`, `mosdepth`, `nextclade`, `iqtree`,
+`python`, `Rscript` all "not found"), despite nothing having changed.
+**Cause:** simply opened a new terminal / returned to the project after a
+break without re-running `conda activate sarscov2-pipeline`. The prompt no
+longer showed the `(sarscov2-pipeline)` prefix, confirming the base
+environment was active instead.
+**Fix:**
+```bash
+conda activate sarscov2-pipeline
+bash scripts/bash/00_setup.sh
+```
+**Lesson:** conda environments do **not** persist automatically across new
+terminal sessions or after closing/reopening a terminal — `conda activate`
+must be rerun every time. Before troubleshooting a sudden wave of "tool not
+found" errors, always check the shell prompt for the environment name, or
+run `echo $CONDA_DEFAULT_ENV`, before assuming something is actually broken.
+
+### Disk space exhaustion risk before first real pipeline run
+
+**Symptom:** pre-flight check passed everything except a disk space warning
+— only 19GB free with 50GB recommended, against ~14GB of BAM files alone
+plus pipeline-generated intermediate files still to come (trimmed FASTQs,
+realigned BAMs, variant tables, consensus FASTAs).
+**Diagnosis:**
+```bash
+df -h
+du -sh ~/* 2>/dev/null | sort -rh | head -15
+du -sh ~/Desktop/* 2>/dev/null | sort -rh
+```
+**Cause:** accumulation of old/duplicate files unrelated to the current
+project: six duplicate copies of the Miniconda installer script (~660MB),
+1.6GB of pip/conda cache, and — the largest single item — a 28GB folder of
+already-superseded BAM files and prior analysis outputs that were fully
+duplicated elsewhere and had already been migrated into the new project
+structure.
+**Fix:**
+```bash
+rm ~/Miniconda3-latest-Linux-x86_64.sh*
+rm ~/Miniconda3-py39_24.1.2-0-Linux-x86_64.sh*
+conda clean --all -y
+rm -rf ~/.cache/pip
+rm -rf ~/Desktop/HIGH_QUALITY_FASTA_FILES   # confirmed fully duplicated elsewhere first
+```
+Freed disk space from 19GB to 55GB available.
+**Lesson:** before deleting any large folder suspected of being redundant,
+explicitly enumerate its contents (`find <dir> -type f`) rather than trusting
+the folder name alone — in this case the folder turned out to contain not
+just raw BAM files but also prior Nextclade analysis results, mutation
+tables, and a consensus FASTA, which were genuinely valuable and needed a
+conscious "yes, these are duplicated elsewhere" confirmation before deletion,
+not an assumption based on the directory name.
+
+---
+
 ## Part 3 — Quick Diagnostic Reference Table
 
 | Symptom | Likely cause | First commands to run |
@@ -348,6 +505,9 @@ created (`.amb .ann .bwt .fai .pac .sa`). No errors encountered at this step.
 | 10+ packages fail citing each other as missing deps | One root package failed | Reinstall the root package alone, read its real error |
 | Bioconductor version mismatch error | R version changed since script was written | Check `R --version`, match against Bioconductor's release table |
 | Package install fails and isn't core to the pipeline | Not worth chasing | Substitute a zero-dependency alternative, document, move on |
+| Script dies silently with no error after one line, `set -e` is active | A `((counter++))` hit zero and was read as failure | Add `\|\| true`, or use `var=$((var+1))` instead |
+| "Tool not found" for many tools at once, nothing changed | Conda env not active in this terminal | `echo $CONDA_DEFAULT_ENV`, then `conda activate <env>` |
+| Large `wget` download reports success but `unzip`/parsing fails | Silent truncation/corruption over a slow connection | Don't trust `file`'s "Zip archive data" verdict; verify with `unzip -t` or re-fetch only the specific small files actually needed |
 
 ---
 
