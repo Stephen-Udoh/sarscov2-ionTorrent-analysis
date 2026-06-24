@@ -114,7 +114,7 @@ module_lineage() {
   is_done "$done" && { info "Lineage done ($sample) — skipping"; return; }
   step "Lineage — $sample"; mkdir -p "${out}/nextclade" "${out}/pangolin"
   run_cmd "nextclade run -D '${REPO_ROOT}/data/reference/nextclade_dataset' -O '${out}/nextclade' '$fasta'"
-  run_cmd "pangolin '$fasta' --outdir '${out}/pangolin' --outfile '${sample}_lineage.csv'"
+  run_cmd "conda run -n pangolin-env pangolin '${fasta}' --outdir '${out}/pangolin' --outfile '${sample}_lineage.csv'"
   mark_done "$done"; log "Lineage complete — $sample"
 }
 
@@ -150,7 +150,7 @@ run_cohort() {
   mkdir -p "${RESULTS}/phylogenetics"
   run_cmd "cat ${fastas[*]} '${REPO_ROOT}/data/reference/NC_045512.2.fasta' > '${RESULTS}/phylogenetics/all_sequences.fasta'"
   run_cmd "mafft --auto --thread 8 '${RESULTS}/phylogenetics/all_sequences.fasta' > '${RESULTS}/phylogenetics/all_aligned.fasta'"
-  run_cmd "iqtree2 -s '${RESULTS}/phylogenetics/all_aligned.fasta' -m GTR+G -B 1000 -T AUTO --prefix '${RESULTS}/phylogenetics/sarscov2_ml_tree' --redo"
+  run_cmd "iqtree -s '${RESULTS}/phylogenetics/all_aligned.fasta' -m GTR+G -B 1000 -T AUTO --prefix '${RESULTS}/phylogenetics/sarscov2_ml_tree' --redo"
   run_cmd "multiqc '${RESULTS}/qc/fastqc' -o '${RESULTS}/qc/multiqc' --title 'SARS-CoV-2 Cohort QC' --force"
   log "Cohort analysis complete ✅"
 }

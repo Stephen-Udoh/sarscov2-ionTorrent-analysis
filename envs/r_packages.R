@@ -3,7 +3,6 @@ cat("Installing R packages...\n")
 cran_packages <- c(
   "ggsci", "ggrepel", "ggpubr", "ggforce", "ggnewscale",
   "ggtext", "ggridges", "ggbeeswarm", "patchwork", "cowplot",
-  "gt", "gtsummary", "flextable", "DT",
   "leaflet", "leaflet.extras", "tmap", "sf", "spdep",
   "ape", "phangorn", "dendextend", "UpSetR",
   "corrplot", "pheatmap", "circlize", "DiagrammeR",
@@ -28,7 +27,7 @@ if (length(to_install) > 0) {
 cat("\nInstalling Bioconductor packages...\n")
 if (!requireNamespace("BiocManager", quietly=TRUE))
   install.packages("BiocManager", repos="https://cloud.r-project.org")
-BiocManager::install(version="3.18")
+BiocManager::install(version="3.22")
 installed_bioc <- rownames(installed.packages())
 to_install_bioc <- bioc_packages[!bioc_packages %in% installed_bioc]
 if (length(to_install_bioc) > 0)

@@ -6,9 +6,9 @@ BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PASS=0; WARN=0; FAIL=0
 
-log_pass() { echo -e "${GREEN}  ✅ $*${NC}"; ((PASS++)); }
-log_warn() { echo -e "${YELLOW}  ⚠️  $*${NC}"; ((WARN++)); }
-log_fail() { echo -e "${RED}  ❌ $*${NC}"; ((FAIL++)); }
+log_pass() { echo -e "${GREEN}  ✅ $*${NC}"; ((PASS++)) || true; }
+log_warn() { echo -e "${YELLOW}  ⚠️  $*${NC}"; ((WARN++)) || true; }
+log_fail() { echo -e "${RED}  ❌ $*${NC}"; ((FAIL++)) || true; }
 section()  { echo -e "\n${BOLD}${BLUE}── $* ──────────────────────────${NC}"; }
 
 echo -e "${BOLD}  Pipeline Pre-flight Check${NC}"
@@ -21,7 +21,7 @@ else
 fi
 
 section "Required Tools"
-for tool in fastqc trimmomatic bwa samtools mosdepth ivar nextclade mafft iqtree2 multiqc python Rscript; do
+for tool in fastqc trimmomatic bwa samtools mosdepth ivar nextclade mafft iqtree multiqc python Rscript; do
   if command -v "$tool" &>/dev/null; then
     log_pass "$tool found"
   else
