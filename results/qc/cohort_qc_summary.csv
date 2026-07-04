@@ -1,0 +1,11 @@
+sample,total_reads,pct_mapped,pct_n,lineage,clade,qc_status
+bauchi_1586,2445083,99.89,8.91,L.3,20B,bad
+bauchi_3370,860753,72.05,0.28,B.1.462,20A,bad
+bauchi_4200,3218043,99.9,5.3,B.1.462,20A,bad
+bauchi_4229,585145,62.46,9.86,B.1.462,20A,bad
+bauchi_4243,2343403,99.37,8.04,B.1.462,20A,bad
+bauchi_4244,6331819,99.95,0.22,B.1.462,20A,bad
+kaduna_0101,95134,99.82,0.33,B.1.1.10,20B,good
+kano_0103,68548,99.78,1.61,LF.7.9.1,24H,good
+kano_0104,35912,62.93,2.71,LF.7.9.1,24H,good
+kano_0105,12797,98.54,3.57,LF.7.9.1,24H,good
