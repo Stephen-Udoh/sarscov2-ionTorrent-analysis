@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_63ada076b50d22e14e6c375f984a441c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_63ada076b50d22e14e6c375f984a441c" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_63ada076b50d22e14e6c375f984a441c = L.map(
+                "map_63ada076b50d22e14e6c375f984a441c",
+                {
+                    center: [10.0, 8.5],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 6,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_3f9dda321b198cbf3904b8106b549e07 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_3f9dda321b198cbf3904b8106b549e07.addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+            var circle_marker_544c0435db58a17032c6df22bbb25b70 = L.circleMarker(
+                [10.357628039537364, 9.701703226566801],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2C3E50", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.5}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+        var popup_b09c7f03e6d1e74ab950a70a8e8285c0 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_dc980fc0b6173dce67858ac50a3ba223 = $(`<div id="html_dc980fc0b6173dce67858ac50a3ba223" style="width: 100.0%; height: 100.0%;">     <b>bauchi_1586</b><br>     State: Bauchi<br>     Lineage: L.3<br>     Clade: 20B<br>     Collection: 2021-01-01<br>     %N: 8.91%<br>     Reads mapped: 99.89%     </div>`)[0];
+                popup_b09c7f03e6d1e74ab950a70a8e8285c0.setContent(html_dc980fc0b6173dce67858ac50a3ba223);
+            
+        
+
+        circle_marker_544c0435db58a17032c6df22bbb25b70.bindPopup(popup_b09c7f03e6d1e74ab950a70a8e8285c0)
+        ;
+
+        
+    
+    
+            circle_marker_544c0435db58a17032c6df22bbb25b70.bindTooltip(
+                `<div>
+                     bauchi_1586 — L.3
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1bfd01ab1cb784be37c47c47109c04d7 = L.circleMarker(
+                [10.248308795510734, 9.761163221444647],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2C3E50", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.5}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+        var popup_9b17b080f6fce2592ccd2fe8b3c0fe51 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_1cb487777e01a2551c8720c5f58a2a53 = $(`<div id="html_1cb487777e01a2551c8720c5f58a2a53" style="width: 100.0%; height: 100.0%;">     <b>bauchi_3370</b><br>     State: Bauchi<br>     Lineage: B.1.462<br>     Clade: 20A<br>     Collection: 2020-01-01<br>     %N: 0.28%<br>     Reads mapped: 72.05%     </div>`)[0];
+                popup_9b17b080f6fce2592ccd2fe8b3c0fe51.setContent(html_1cb487777e01a2551c8720c5f58a2a53);
+            
+        
+
+        circle_marker_1bfd01ab1cb784be37c47c47109c04d7.bindPopup(popup_9b17b080f6fce2592ccd2fe8b3c0fe51)
+        ;
+
+        
+    
+    
+            circle_marker_1bfd01ab1cb784be37c47c47109c04d7.bindTooltip(
+                `<div>
+                     bauchi_3370 — B.1.462
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_123ab653c1b1830ff568b14dcccec5c0 = L.circleMarker(
+                [10.386741364249204, 9.897209846226874],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2C3E50", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.5}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+        var popup_430901bd3479f823308084f11cc47b0f = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_a60a8eaf60e551ce43e1fff408ad672e = $(`<div id="html_a60a8eaf60e551ce43e1fff408ad672e" style="width: 100.0%; height: 100.0%;">     <b>bauchi_4200</b><br>     State: Bauchi<br>     Lineage: B.1.462<br>     Clade: 20A<br>     Collection: 2020-01-01<br>     %N: 5.3%<br>     Reads mapped: 99.9%     </div>`)[0];
+                popup_430901bd3479f823308084f11cc47b0f.setContent(html_a60a8eaf60e551ce43e1fff408ad672e);
+            
+        
+
+        circle_marker_123ab653c1b1830ff568b14dcccec5c0.bindPopup(popup_430901bd3479f823308084f11cc47b0f)
+        ;
+
+        
+    
+    
+            circle_marker_123ab653c1b1830ff568b14dcccec5c0.bindTooltip(
+                `<div>
+                     bauchi_4200 — B.1.462
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_982d831ca5c4e2874237fd8b91435e6a = L.circleMarker(
+                [10.433453870311453, 9.720281649788825],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2C3E50", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.5}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+        var popup_1585bfcfa7641d8005af411d0671b9a2 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_89c82da6b5206d6de9fd50e31081f28e = $(`<div id="html_89c82da6b5206d6de9fd50e31081f28e" style="width: 100.0%; height: 100.0%;">     <b>bauchi_4229</b><br>     State: Bauchi<br>     Lineage: B.1.462<br>     Clade: 20A<br>     Collection: 2020-01-01<br>     %N: 9.86%<br>     Reads mapped: 62.46%     </div>`)[0];
+                popup_1585bfcfa7641d8005af411d0671b9a2.setContent(html_89c82da6b5206d6de9fd50e31081f28e);
+            
+        
+
+        circle_marker_982d831ca5c4e2874237fd8b91435e6a.bindPopup(popup_1585bfcfa7641d8005af411d0671b9a2)
+        ;
+
+        
+    
+    
+            circle_marker_982d831ca5c4e2874237fd8b91435e6a.bindTooltip(
+                `<div>
+                     bauchi_4229 — B.1.462
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5f8dd53f8dd71d2cf21689f0dcd680ed = L.circleMarker(
+                [10.292376545905581, 9.703139165831422],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2C3E50", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.5}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+        var popup_8a87937410709aaf740065271a60df94 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_d9021ab94b248e9f2f8c04a59845d786 = $(`<div id="html_d9021ab94b248e9f2f8c04a59845d786" style="width: 100.0%; height: 100.0%;">     <b>bauchi_4243</b><br>     State: Bauchi<br>     Lineage: B.1.462<br>     Clade: 20A<br>     Collection: 2020-01-01<br>     %N: 8.04%<br>     Reads mapped: 99.37%     </div>`)[0];
+                popup_8a87937410709aaf740065271a60df94.setContent(html_d9021ab94b248e9f2f8c04a59845d786);
+            
+        
+
+        circle_marker_5f8dd53f8dd71d2cf21689f0dcd680ed.bindPopup(popup_8a87937410709aaf740065271a60df94)
+        ;
+
+        
+    
+    
+            circle_marker_5f8dd53f8dd71d2cf21689f0dcd680ed.bindTooltip(
+                `<div>
+                     bauchi_4243 — B.1.462
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3ae89347bb3514f45f31dd0d8b987a8d = L.circleMarker(
+                [10.23139139244108, 9.84580658643101],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2C3E50", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.5}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+        var popup_dcdca3190bfe5fe2f5afe4d092eacd73 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_5eea5310f7a6adf0ca0ce4eb46da709d = $(`<div id="html_5eea5310f7a6adf0ca0ce4eb46da709d" style="width: 100.0%; height: 100.0%;">     <b>bauchi_4244</b><br>     State: Bauchi<br>     Lineage: B.1.462<br>     Clade: 20A<br>     Collection: 2020-01-01<br>     %N: 0.22%<br>     Reads mapped: 99.95%     </div>`)[0];
+                popup_dcdca3190bfe5fe2f5afe4d092eacd73.setContent(html_5eea5310f7a6adf0ca0ce4eb46da709d);
+            
+        
+
+        circle_marker_3ae89347bb3514f45f31dd0d8b987a8d.bindPopup(popup_dcdca3190bfe5fe2f5afe4d092eacd73)
+        ;
+
+        
+    
+    
+            circle_marker_3ae89347bb3514f45f31dd0d8b987a8d.bindTooltip(
+                `<div>
+                     bauchi_4244 — B.1.462
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_24f2483117a874fed9cc5b8de5152adc = L.circleMarker(
+                [11.860160790905159, 8.501651295205995],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#922B21", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.5}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+        var popup_a0d9d30852481d2ca02615e533b2417e = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_0b611fc17d5dbce79ed0cb0fe0ae7e50 = $(`<div id="html_0b611fc17d5dbce79ed0cb0fe0ae7e50" style="width: 100.0%; height: 100.0%;">     <b>kano_0103</b><br>     State: Kano<br>     Lineage: LF.7.9.1<br>     Clade: 24H<br>     Collection: 2025-01-01<br>     %N: 1.61%<br>     Reads mapped: 99.78%     </div>`)[0];
+                popup_a0d9d30852481d2ca02615e533b2417e.setContent(html_0b611fc17d5dbce79ed0cb0fe0ae7e50);
+            
+        
+
+        circle_marker_24f2483117a874fed9cc5b8de5152adc.bindPopup(popup_a0d9d30852481d2ca02615e533b2417e)
+        ;
+
+        
+    
+    
+            circle_marker_24f2483117a874fed9cc5b8de5152adc.bindTooltip(
+                `<div>
+                     kano_0103 — LF.7.9.1
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ec9dfaeb99adf8ec8e24454a09c311ff = L.circleMarker(
+                [12.047165331333858, 8.605482444180966],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#922B21", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.5}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+        var popup_3faeb40f168563d7ec91e2c8b9809417 = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_9546e2c2c2ecf9ceab9501b1192edebf = $(`<div id="html_9546e2c2c2ecf9ceab9501b1192edebf" style="width: 100.0%; height: 100.0%;">     <b>kano_0104</b><br>     State: Kano<br>     Lineage: LF.7.9.1<br>     Clade: 24H<br>     Collection: 2025-01-01<br>     %N: 2.71%<br>     Reads mapped: 62.93%     </div>`)[0];
+                popup_3faeb40f168563d7ec91e2c8b9809417.setContent(html_9546e2c2c2ecf9ceab9501b1192edebf);
+            
+        
+
+        circle_marker_ec9dfaeb99adf8ec8e24454a09c311ff.bindPopup(popup_3faeb40f168563d7ec91e2c8b9809417)
+        ;
+
+        
+    
+    
+            circle_marker_ec9dfaeb99adf8ec8e24454a09c311ff.bindTooltip(
+                `<div>
+                     kano_0104 — LF.7.9.1
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_08dc908ff11375408148a295a8ac9892 = L.circleMarker(
+                [11.91833218661221, 8.618779705162773],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#922B21", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.5}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+        var popup_fa035ba292826dd686de3dbdf321925d = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_e58b38328120b7c8e9fac2d8362c2cfd = $(`<div id="html_e58b38328120b7c8e9fac2d8362c2cfd" style="width: 100.0%; height: 100.0%;">     <b>kano_0105</b><br>     State: Kano<br>     Lineage: LF.7.9.1<br>     Clade: 24H<br>     Collection: 2025-01-01<br>     %N: 3.57%<br>     Reads mapped: 98.54%     </div>`)[0];
+                popup_fa035ba292826dd686de3dbdf321925d.setContent(html_e58b38328120b7c8e9fac2d8362c2cfd);
+            
+        
+
+        circle_marker_08dc908ff11375408148a295a8ac9892.bindPopup(popup_fa035ba292826dd686de3dbdf321925d)
+        ;
+
+        
+    
+    
+            circle_marker_08dc908ff11375408148a295a8ac9892.bindTooltip(
+                `<div>
+                     kano_0105 — LF.7.9.1
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fab31eb8a61c1eab7bdb0b5918899a45 = L.circleMarker(
+                [10.619229137003348, 7.290349627903418],
+                {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1E6B52", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.5}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+        var popup_d75cdf2f13b3798245983fecf97585ed = L.popup({
+  "maxWidth": 220,
+});
+
+        
+            
+                var html_ad65d9927bf337507bb8749a34150850 = $(`<div id="html_ad65d9927bf337507bb8749a34150850" style="width: 100.0%; height: 100.0%;">     <b>kaduna_0101</b><br>     State: Kaduna<br>     Lineage: B.1.1.10<br>     Clade: 20B<br>     Collection: 2021-01-01<br>     %N: 0.33%<br>     Reads mapped: 99.82%     </div>`)[0];
+                popup_d75cdf2f13b3798245983fecf97585ed.setContent(html_ad65d9927bf337507bb8749a34150850);
+            
+        
+
+        circle_marker_fab31eb8a61c1eab7bdb0b5918899a45.bindPopup(popup_d75cdf2f13b3798245983fecf97585ed)
+        ;
+
+        
+    
+    
+            circle_marker_fab31eb8a61c1eab7bdb0b5918899a45.bindTooltip(
+                `<div>
+                     kaduna_0101 — B.1.1.10
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_5efc7719cdd86bddf8edf9a0ead85172 = L.marker(
+                [10.3158, 9.8442],
+                {
+}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+            var div_icon_158c77d4c2ffa83c4180f75eaed964cd = L.divIcon({
+  "html": "\u003cdiv style=\"font-family:Liberation Serif;font-size:11px;font-weight:bold;color:#2C3E50;white-space:nowrap\"\u003eBauchi\u003c/div\u003e",
+  "iconSize": [80, 20],
+  "iconAnchor": [40, 10],
+  "className": "empty",
+});
+        
+    
+                marker_5efc7719cdd86bddf8edf9a0ead85172.setIcon(div_icon_158c77d4c2ffa83c4180f75eaed964cd);
+            
+    
+            var marker_bee2b0d51d4262bbc42ac3f6699beb24 = L.marker(
+                [12.0022, 8.592],
+                {
+}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+            var div_icon_f54c76d804bcf642cd6b51f47e315e69 = L.divIcon({
+  "html": "\u003cdiv style=\"font-family:Liberation Serif;font-size:11px;font-weight:bold;color:#922B21;white-space:nowrap\"\u003eKano\u003c/div\u003e",
+  "iconSize": [80, 20],
+  "iconAnchor": [40, 10],
+  "className": "empty",
+});
+        
+    
+                marker_bee2b0d51d4262bbc42ac3f6699beb24.setIcon(div_icon_f54c76d804bcf642cd6b51f47e315e69);
+            
+    
+            var marker_4567b4af49acb4155c4e68a9fdb71662 = L.marker(
+                [10.5264, 7.4384],
+                {
+}
+            ).addTo(map_63ada076b50d22e14e6c375f984a441c);
+        
+    
+            var div_icon_5988912ea6cddafd35d75ae59292ec93 = L.divIcon({
+  "html": "\u003cdiv style=\"font-family:Liberation Serif;font-size:11px;font-weight:bold;color:#1E6B52;white-space:nowrap\"\u003eKaduna\u003c/div\u003e",
+  "iconSize": [80, 20],
+  "iconAnchor": [40, 10],
+  "className": "empty",
+});
+        
+    
+                marker_4567b4af49acb4155c4e68a9fdb71662.setIcon(div_icon_5988912ea6cddafd35d75ae59292ec93);
+            
+</script>
+</html>
