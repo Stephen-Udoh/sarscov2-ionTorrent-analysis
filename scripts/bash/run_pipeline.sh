@@ -92,7 +92,7 @@ module_variants() {
   local out="${RESULTS}/variants/${sample}"; local done="${out}/.done_${sample}_variants"
   is_done "$done" && { info "Variants done ($sample) — skipping"; return; }
   step "Variant Calling — $sample"; mkdir -p "$out"
-  run_cmd "samtools mpileup -aa -A -d 0 -B -Q 0 '$bam' | ivar variants -p '${out}/${sample}_variants' -q 20 -t 0.03 -m 10 -r '$ref'"
+  run_cmd "samtools mpileup -aa -A -d 0 -B -Q 0 '$bam' | ivar variants -p '${out}/${sample}_variants' -q 20 -t 0.03 -m 10 -r '$ref' -g '${REPO_ROOT}/data/reference/NC_045512.2.gff3'"
   mark_done "$done"; log "Variants complete — $sample"
 }
 
